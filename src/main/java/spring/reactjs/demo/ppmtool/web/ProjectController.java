@@ -5,11 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import spring.reactjs.demo.ppmtool.domain.Project;
+import spring.reactjs.demo.ppmtool.exceptions.ProjectIdException;
 import spring.reactjs.demo.ppmtool.services.MapValidationErrorService;
 import spring.reactjs.demo.ppmtool.services.ProjectService;
 
@@ -36,5 +34,15 @@ public class ProjectController {
 
         Project prj1=projectService.saveOrUpdateProject(project);
         return new ResponseEntity<Project>(prj1, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{projectId}")
+    public ResponseEntity<?> getProjectById(@PathVariable String projectId){
+        Project project = projectService.findProjectByIdentifier(projectId.toUpperCase());
+
+        if(project == null){
+            throw new ProjectIdException("Project Id "+projectId+" not exist");
+        }
+        return new ResponseEntity<Project>(project,HttpStatus.OK);
     }
 }
