@@ -11,4 +11,7 @@ import java.util.Optional;
 public interface ProjectRepository extends CrudRepository<Project,Long> {
 
     Project findByProjectIdentifier(String projectIdentifier);
+
+    @Override
+    public Iterable<Project> findAll();
 }
